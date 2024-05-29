@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
+// Signup.js
+import React from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert, ImageBackground } from 'react-native';
 import { auth } from './firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import CustomButton from './CustomButton';
+import useForm from './useForm';
+import styles from './styles';
 
 const Signup = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [formValues, handleChange] = useForm({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const { email, password, confirmPassword } = formValues;
 
   const handleSignup = () => {
     if (password !== confirmPassword) {
@@ -33,14 +41,14 @@ const Signup = ({ navigation }) => {
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="#333"
-          onChangeText={text => setEmail(text)}
+          onChangeText={text => handleChange('email', text)}
           value={email}
         />
         <TextInput
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="#333"
-          onChangeText={text => setPassword(text)}
+          onChangeText={text => handleChange('password', text)}
           value={password}
           secureTextEntry={true}
         />
@@ -48,13 +56,11 @@ const Signup = ({ navigation }) => {
           style={styles.input}
           placeholder="Confirm Password"
           placeholderTextColor="#333"
-          onChangeText={text => setConfirmPassword(text)}
+          onChangeText={text => handleChange('confirmPassword', text)}
           value={confirmPassword}
           secureTextEntry={true}
         />
-        <TouchableOpacity style={styles.button} onPress={handleSignup}>
-          <Text style={styles.buttonText}>Signup</Text>
-        </TouchableOpacity>
+        <CustomButton title="Signup" onPress={handleSignup} />
         <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.linkText}>Already have an account? Login</Text>
         </TouchableOpacity>
@@ -62,57 +68,5 @@ const Signup = ({ navigation }) => {
     </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
-  },
-  title: {
-    fontSize: 28,
-    color: '#333',
-    fontWeight: 'bold',
-    marginBottom: 30,
-  },
-  input: {
-    width: '80%',
-    height: 50,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 15,
-    paddingLeft: 15,
-    backgroundColor: 'white',
-    opacity: 0.8,
-  },
-  button: {
-    backgroundColor: '#f7b731',
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 5,
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  link: {
-    marginTop: 20,
-  },
-  linkText: {
-    color: 'black',
-    fontSize: 16,
-  },
-});
 
 export default Signup;
